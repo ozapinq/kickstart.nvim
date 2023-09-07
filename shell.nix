@@ -1,10 +1,8 @@
-{ pkgs ? import <nixpkgs> {}}:
+{ pkgs ? import <nixpkgs> { } }:
 
-let nvim-custom = import ./default.nix {pkgs=pkgs; };
-in
+let nvim-custom = import ./default.nix { inherit pkgs; };
 
-
-pkgs.mkShell {
-  packages = [nvim-custom];
-  buildInputs = [nvim-custom.buildInputs];
+in pkgs.mkShell {
+  packages = [ nvim-custom ];
+  buildInputs = [ nvim-custom.buildInputs ];
 }
