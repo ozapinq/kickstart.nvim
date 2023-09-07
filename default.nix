@@ -3,7 +3,22 @@
 let
   neovim0 = pkgs.neovim.override {
     configure = {
-      # customRC = builtins.readFile ./init.vim;
+      customRC = ''
+        function! Init()
+          let files = split(glob('${./config}/*'), '\n')
+          for file in files
+            let extension = fnamemodify(file, ':e')
+            if extension == 'lua'
+              execute 'luafile ' . file
+            elseif extension == 'vim'
+              execute 'source ' . file
+            endif
+            echo "Processed file: " . file
+          endfor
+        endfunction
+
+        autocmd VimEnter * call Init()
+      '';
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           coq-artifacts
@@ -77,24 +92,6 @@ let
     };
   };
   neovim = neovim0.overrideAttrs (finalAttrs: previousAttrs: { 
-    postInstall = ''
-    ${previousAttrs.postInstall or ""}
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    echo ################################################################################
-    mkdir -p $out/share/nvim/site
-    '';
     buildInputs = previousAttrs.buildInputs or [] ++ [
       pkgs.which
       pkgs.git
