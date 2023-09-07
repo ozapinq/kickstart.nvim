@@ -95,35 +95,19 @@ let
     echo ################################################################################
     mkdir -p $out/share/nvim/site
     '';
+    buildInputs = previousAttrs.buildInputs or [] ++ [
+      pkgs.which
+      pkgs.git
+      pkgs.ripgrep
+      pkgs.fd
+      pkgs.lazygit
+      pkgs.python311
+      pkgs.niv
+      pkgs.neovim
+      pkgs.lua
+      pkgs.luaformatter
+      pkgs.black
+      pkgs.nixfmt
+    ];
   });
-in pkgs.stdenv.mkDerivation rec {
-  name = "nvim-env";
-
-  srcs = ./.;
-
-  nativeBuildInputs = with pkgs; [ makeWrapper ];
-
-  buildInputs = [
-    neovim
-    pkgs.which
-    pkgs.git
-    pkgs.ripgrep
-    pkgs.fd
-    pkgs.lazygit
-    pkgs.python311
-    pkgs.niv
-    pkgs.neovim
-    pkgs.lua
-    pkgs.luaformatter
-    pkgs.black
-    pkgs.nixfmt
-  ];
-
-  installPhase = ''
-    mkdir -p $out/bin $out/share/nvim
-    exit 0
-  '';
-
-  buildPhase = installPhase;
-}
-
+in neovim
