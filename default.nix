@@ -1,6 +1,16 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
+  vim-ai = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-ai";
+    src = pkgs.fetchFromGitHub {
+      owner = "madox2";
+      repo = "vim-ai";
+      rev = "924e3a390f043e979f16113f6b0a55f8c54b1f5e";
+      sha256 = "sha256-8LxxT6i2io+GlEHtj31a0+kH5zX4mL4fFLUY5yNs8fM=";
+    };
+  };
+
   neovim0 = pkgs.neovim.override {
     configure = {
       customRC = ''
@@ -19,6 +29,7 @@ let
 
         autocmd VimEnter * call Init()
       '';
+
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           coq-artifacts
@@ -82,6 +93,7 @@ let
           telescope-fzf-native-nvim
           telescope-nvim
           toggleterm-nvim
+          vim-ai
           vim-colorschemes
           vim-fugitive
           vim-rhubarb
@@ -91,8 +103,9 @@ let
       };
     };
   };
-  neovim = neovim0.overrideAttrs (finalAttrs: previousAttrs: { 
-    buildInputs = previousAttrs.buildInputs or [] ++ [
+
+  neovim = neovim0.overrideAttrs (finalAttrs: previousAttrs: {
+    buildInputs = previousAttrs.buildInputs or [ ] ++ [
       pkgs.which
       pkgs.git
       pkgs.ripgrep
