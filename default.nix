@@ -36,6 +36,7 @@ let
           coq_nvim
           fidget-nvim
           gitsigns-nvim
+          gruvbox
           indent-blankline-nvim
           lualine-nvim
           neo-tree-nvim
